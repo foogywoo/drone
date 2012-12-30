@@ -1,7 +1,7 @@
 #CONFIG = qt warn_on thread debug agg
 CONFIG = qt warn_on thread debug
 
-QT += qt3support opengl
+QT += qt3support opengl xml
 
 message(Gears : Builing Makefile with the following config flags : $$CONFIG)
 
