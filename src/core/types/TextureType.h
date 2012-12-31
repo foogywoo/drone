@@ -46,16 +46,16 @@ public:
   
   unsigned int createWithSize(int textureSizeX, int textureSizeY, bool forceCreation = false);
   unsigned int updateWithVideoRGBA(const VideoRGBAType &image);
-  unsigned int textureSizeX() const {return _textureSizeX;}
-  unsigned int textureSizeY() const {return _textureSizeY;}
+  int textureSizeX() const {return _textureSizeX;}
+  int textureSizeY() const {return _textureSizeY;}
 
-  void setTextureSizeX(unsigned int value) {_textureSizeX = value;}
-  void setTextureSizeY(unsigned int value) {_textureSizeY = value;}
+  void setTextureSizeX(int value) {_textureSizeX = value;}
+  void setTextureSizeY(int value) {_textureSizeY = value;}
   
 private:
 	unsigned int _textureName;
-  unsigned int _textureSizeX;
-  unsigned int _textureSizeY;
+  int _textureSizeX;
+  int _textureSizeY;
   
 };
 
