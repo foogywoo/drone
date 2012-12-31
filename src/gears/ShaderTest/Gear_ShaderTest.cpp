@@ -24,7 +24,10 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else
+#define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
+#include <GL/glext.h>
+#include <GL/glx.h>
 #endif
 
 #include <iostream>
@@ -79,7 +82,7 @@ Gear_ShaderTest::~Gear_ShaderTest()
 void Gear_ShaderTest::internalInit()
 {
   initializeShaderProgram();
-  enumarateActiveUniforms();
+  enumerateActiveUniforms();
   
   if (_fbo)
   {
@@ -188,17 +191,26 @@ void Gear_ShaderTest::initializeShaderProgram()
   
 }
 
-void Gear_ShaderTest::enumarateActiveUniforms()
+void Gear_ShaderTest::enumerateActiveUniforms()
 {
   GLint maxUniformLen;
   GLint numUniforms;
   char *uniformName;
   GLint index;
   
+  //on linux we must map the extensions ourself
+  #ifdef Q_OS_LINUX
+  PFNGLGETACTIVEUNIFORMPROC glGetActiveUniform;
+  glGetActiveUniform = (PFNGLGETACTIVEUNIFORMPROC)glXGetProcAddressARB((const unsigned char*)"glGetActiveUniform");
+
+  PFNGLGETPROGRAMIVPROC glGetProgramiv;
+  glGetProgramiv = (PFNGLGETPROGRAMIVPROC)glXGetProcAddressARB((const unsigned char*)"glGetProgramiv");
+  #endif
+
   glGetProgramiv(_shaderProgram.programId(), GL_ACTIVE_UNIFORMS, &numUniforms);
   glGetProgramiv(_shaderProgram.programId(), GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLen);
   
-  uniformName = malloc(sizeof(char) * maxUniformLen);
+  uniformName = (char*) malloc(sizeof(char) * maxUniformLen);
   
   std::cout << "--== Enumerating uniforms for program " << _shaderProgram.programId() << " ==--" << std::endl;
   
@@ -213,7 +225,7 @@ void Gear_ShaderTest::enumarateActiveUniforms()
     std::cout << "Uniform name: " << uniformName << std::endl;
     
     // Get the uniform location
-    location = glGetUniformLocation(_shaderProgram.programId(), uniformName);
+    location = _shaderProgram.uniformLocation(uniformName);
     std::cout << "Uniform location: " << location << std::endl;
     
     std::cout << "Uniform type: ";

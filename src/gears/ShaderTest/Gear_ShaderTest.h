@@ -42,7 +42,7 @@ protected:
 
 private:
   void initializeShaderProgram();
-  void enumarateActiveUniforms();
+  void enumerateActiveUniforms();
   void enableGLStates();
 
   PlugIn<TextureType> *_TEXTURE_IN;
